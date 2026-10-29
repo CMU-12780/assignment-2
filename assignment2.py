@@ -17,6 +17,7 @@ import pandas as pd
 import folium
 from folium.plugins import HeatMap, MarkerCluster
 import json
+import xyzservices.providers as xyz
 
 
 def parse_coordinate_string(coord_str):
@@ -193,9 +194,10 @@ def create_map_from_excel(excel_file, output_file='map.html',
         tiles='OpenStreetMap'
     )
 
-    # Add different tile layers
-    folium.TileLayer('CartoDB positron', name='Light Mode').add_to(m)
-    folium.TileLayer('CartoDB dark_matter', name='Dark Mode').add_to(m)
+    # Add different tile layers (Esri canvas tiles don't require an API key)
+    folium.TileLayer(xyz.Esri.WorldGrayCanvas, name='Light Mode').add_to(m)
+    folium.TileLayer(xyz.Esri.WorldGrayCanvas(variant='Canvas/World_Dark_Gray_Base'),
+                     name='Dark Mode').add_to(m)
 
     # Add map elements from each tab
     print("Adding markers...")
